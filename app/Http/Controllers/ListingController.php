@@ -86,26 +86,32 @@ class ListingController extends Controller
     {
         $listing->update(
             $request->validate([
-            'beds' => 'required|integer|min:0|max:20',
-            'baths' => 'required|integer|min:0|max:20',
-            'area' => 'required|integer|min:15|max:1500',
-            'city' => 'required',
-            'code' => 'required',
-            'street' => 'required',
-            'street_nr' => 'required|integer|min:1|max:1000',
-            'price' => 'required|integer|min:1|max:20000000000',
-        ])
-    );
+                'beds' => 'required|integer|min:0|max:20',
+                'baths' => 'required|integer|min:0|max:20',
+                'area' => 'required|integer|min:15|max:1500',
+                'city' => 'required',
+                'code' => 'required',
+                'street' => 'required',
+                'street_nr' => 'required|integer|min:1|max:1000',
+                'price' => 'required|integer|min:1|max:20000000000',
+            ])
+        );
 
-    return redirect()->route('listing.index')
-        ->with('success', 'Listing was updated successfully!');
+        // redirect
+        return redirect()->route('listing.index')
+            ->with('success', 'Listing was updated successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Listing $listing)
     {
-        //
+        // delete
+        $listing->delete();
+
+        // redirect
+        return redirect()->route('listing.index')
+            ->with('success', 'Listing was deleted successfully!');
     }
 }
