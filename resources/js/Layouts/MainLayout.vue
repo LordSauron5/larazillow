@@ -1,7 +1,6 @@
 <template>
-    <Link href="/">Main Page</Link>&nbsp;
-    <Link href="/hello">Show Page</Link>
-    <!-- <div>The Page with timer: {{ timer }}</div> -->
+    <Link href="/listing">Listings</Link>&nbsp;
+    <Link href="/listing/create">New Listing</Link>
     <div v-if="success" class="success">
         {{ success }}
     </div>
@@ -14,11 +13,6 @@
 
     // page.props.value.flash.success
     const success = computed(()=> usePage().props.flash.success)
-
-    // const timer = ref(0)
-    // setInterval(() => {
-    //     timer.value++
-    // }, 1000);
 </script>
 
 <style scoped>
