@@ -16,7 +16,7 @@
         </div>
     </header>
 
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 w-full">
         <div v-if="success" class="mb-4 border rounded-md shadow-sm border-green dark:border-green-800 bg-green50 dark:bg-green-900 p-2">
             {{ success }}
         </div>
