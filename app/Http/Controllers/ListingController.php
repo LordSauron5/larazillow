@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class ListingController extends Controller
 {
+
+    public function __construct()
+    {
+        // check if user is authorized to interact with a listing
+        $this->authorizeResource(Listing::class, 'listing');
+    }
+
+
     /**
      * Display a listing of the resource.
      */
