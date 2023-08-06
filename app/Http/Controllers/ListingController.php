@@ -20,15 +20,19 @@ class ListingController extends Controller
      */
     public function index(Request $request)
     {
+        // set
+        $filters = $request->only([
+            'priceFrom', 'priceTo', 'beds', 'baths', 'areaFrom', 'areaTo'
+        ]);
+
         return inertia(
             'Listing/Index',
             [
-                'filters' => $request->only([
-                    'priceFrom', 'priceTo', 'beds', 'baths', 'areaFrom', 'areaTo'
-                ]),
-                'listings' => Listing::orderByDesc('created_at')
-                ->paginate(10)
-                ->withQueryString()
+                'filters' => $filters,
+                'listings' => Listing::mostRecent()
+                    ->filter($filters)
+                    ->paginate(10)
+                    ->withQueryString()
             ]
         );
     }
