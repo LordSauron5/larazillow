@@ -45,6 +45,9 @@ class Listing extends Model
         )->when(
             $filters['baths'] ?? null,
             fn($query, $value) => $query->where('baths', (int) $value < 6 ? '=' : '>=', $value)
+        )->when(
+            $filters['deleted'] ?? false,
+            fn($query, $value) => $query->withTrashed()
         );
     }
 }
