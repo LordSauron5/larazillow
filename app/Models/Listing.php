@@ -14,6 +14,9 @@ class Listing extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['beds', 'baths', 'area', 'city', 'code', 'street', 'street_nr', 'price'];
+    protected $sortable = [
+        'price', 'created_at'
+    ];
 
     public function owner(): BelongsTo
     {
@@ -29,25 +32,31 @@ class Listing extends Model
     {
         return $query->when(
             $filters['priceFrom'] ?? null,
-            fn($query, $value) => $query->where('price', '>=', $value)
+            fn ($query, $value) => $query->where('price', '>=', $value)
         )->when(
             $filters['priceTo'] ?? null,
-            fn($query, $value) => $query->where('price', '<=', $value)
+            fn ($query, $value) => $query->where('price', '<=', $value)
         )->when(
             $filters['areaFrom'] ?? null,
-            fn($query, $value) => $query->where('area', '>=', $value)
+            fn ($query, $value) => $query->where('area', '>=', $value)
         )->when(
             $filters['areaTo'] ?? null,
-            fn($query, $value) => $query->where('area', '<=', $value)
+            fn ($query, $value) => $query->where('area', '<=', $value)
         )->when(
             $filters['beds'] ?? null,
-            fn($query, $value) => $query->where('beds', (int) $value < 6 ? '=' : '>=', $value)
+            fn ($query, $value) => $query->where('beds', (int) $value < 6 ? '=' : '>=', $value)
         )->when(
             $filters['baths'] ?? null,
-            fn($query, $value) => $query->where('baths', (int) $value < 6 ? '=' : '>=', $value)
+            fn ($query, $value) => $query->where('baths', (int) $value < 6 ? '=' : '>=', $value)
         )->when(
             $filters['deleted'] ?? false,
-            fn($query, $value) => $query->withTrashed()
+            fn ($query, $value) => $query->withTrashed()
+        )->when(
+            $filters['by'] ?? false,
+            fn ($query, $value) => 
+            !in_array($value, $this->sortable) 
+            ? $query : 
+            $query->orderBy($value, $filters['order'] ?? 'DESC')
         );
     }
 }
