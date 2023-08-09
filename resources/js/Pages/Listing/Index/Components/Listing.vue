@@ -12,9 +12,6 @@
                     <ListingAddress :listing="listing" class="text-gray"/>
                 </Link>
             </div>
-            <div>
-                <Link :href="route('listing.edit', {listing: listing.id})">Edit</Link>
-            </div>
         </Box>
 </template>
 
