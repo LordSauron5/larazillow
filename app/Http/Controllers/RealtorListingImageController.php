@@ -28,7 +28,7 @@ class RealtorListingImageController extends Controller
         if ($request->hasFile('images')) {
             // validate images
             $request->validate([
-                'images.*' => 'mimes:jpg,png,jpeg,webp|max:5000'
+                'images.*' => 'mimes:jpg,png,jpeg,webp'
             ], [
                 'images.*.mimes' => 'Invalid file type present in selection, please upload a png, jpg , jpeg, webp',
             ]);
