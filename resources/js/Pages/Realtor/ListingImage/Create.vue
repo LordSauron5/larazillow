@@ -9,12 +9,29 @@
             </section>
         </form>
     </Box>
+
+    <Box>
+        <template #header>Currrent Listing Images</template>
+        <section class="mt-4 grid grid-cols-3 gap-4">
+            <div v-for="image in listing.images" :key="image.id">
+                <img :src="image.src" class="rounded-md">
+            </div>
+        </section>
+    </Box>
 </template>
 
 <script setup>
 import Box from '@/Components/UI/Box.vue'
+import NProgress from 'nprogress'
 import { useForm } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import { router } from '@inertiajs/vue3'
+
+router.on('progress', (event) => {
+  if (event.detail.progress.percentage) {
+    NProgress.set((event.detail.progress.percentage / 100) * 0.9)
+  }
+})
 
 const props = defineProps({listing: Object})
 
