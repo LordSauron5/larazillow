@@ -66,4 +66,9 @@ class Listing extends Model
             $query->orderBy($value, $filters['order'] ?? 'DESC')
         );
     }
+
+    public function offers(): HasMany 
+    {
+        return $this->hasMany(Offer::class, 'listing_id');
+    }
 }
