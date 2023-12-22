@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Offer extends Model
 {
@@ -12,14 +14,27 @@ class Offer extends Model
 
     protected $fillable = ['amount', 'accepted_at', 'rejected_at'];
 
+    /**
+     * Get the listing that owns the offer.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function listing(): BelongsTo 
     {
         return $this->belongsTo(Listing::class, 'listing_id');
     }
-
+    /**
+     * Get the bidder that owns the offer.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function bidder(): BelongsTo 
     {
         return $this->belongsTo(User::class, 'bidder_id');
+    }
+
+    public function scopeByMe(Builder $query): Builder {
+        return $query->where('bidder_id', Auth::user()?->id);
     }
 
 }
