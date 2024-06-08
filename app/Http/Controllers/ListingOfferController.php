@@ -10,6 +10,9 @@ class ListingOfferController extends Controller
 {
     public function store(Listing $listing, Request $request)
     {
+        // check if user is authorized and not sold yet
+        $this->authorize('view', $listing);
+
         $listing->offers()->save(
             Offer::make(
                 $request->validate([
