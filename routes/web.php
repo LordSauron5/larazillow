@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ListingController;
@@ -37,9 +38,14 @@ Route::get('/email/verify', function(){
     return inertia('Auth/VerifyEmail');
 })->middleware('auth')->name('verification.notice');
 
-Route::resource('/user-account', UserAccountController::class)
-    ->middleware('auth')
-    ->only(['create', 'store']);
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect()->route('listing.index')
+    ->with('success', 'Email was verified!');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::resource('/user-account', UserAccountController::class)->only(['store','create']);
 
 Route::resource('/listing.offer', ListingOfferController::class)
     ->only(['store']);
