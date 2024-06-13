@@ -33,6 +33,10 @@ Route::get('/login', [AuthController::class, 'create'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('login.store');
 Route::delete('/logout', [AuthController::class, 'destroy'])->name('logout');
 
+Route::get('/email/verify', function(){
+    return inertia('Auth/VerifyEmail');
+})->middleware('auth')->name('verification.notice');
+
 Route::resource('/user-account', UserAccountController::class)
     ->middleware('auth')
     ->only(['create', 'store']);
@@ -45,7 +49,7 @@ Route::put('notification/{notification}/seen', NotificationSeenController::class
 
 Route::prefix('realtor')
     ->name('realtor.')
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->group(function() {
         Route::name('listing.restore')
             ->put(
