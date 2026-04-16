@@ -1,66 +1,141 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LaraZillow
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A real estate listing platform built with Laravel 10 and Vue 3, similar to Zillow. Users can browse property listings, make offers, and receive notifications. Realtors manage their own listings, upload images, and handle incoming offers.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Layer | Technology |
+|-------|-----------|
+| Language | PHP 8.1 |
+| Backend | Laravel 10 |
+| Frontend | Vue 3 (Composition API) |
+| Routing | Inertia.js (no separate SPA — server drives all navigation) |
+| Styling | Tailwind CSS + @tailwindcss/forms |
+| Build | Vite 4 |
+| Auth | Laravel session auth + Sanctum (stateful) |
+| Database | MySQL |
+| Mail (dev) | Mailpit (SMTP trap on port 1025) |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.1
+- Composer
+- Node.js 18+
+- MySQL
+- Mailpit (optional, for email in development)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Installation
 
-## Laravel Sponsors
+```bash
+# 1. Clone the repo
+git clone <repo-url>
+cd larazillow
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+# 2. Install PHP dependencies
+composer install
 
-### Premium Partners
+# 3. Install JS dependencies
+npm install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+# 4. Set up environment
+cp .env.example .env
+php artisan key:generate
 
-## Contributing
+# 5. Configure your database in .env
+# DB_DATABASE=larazillow
+# DB_USERNAME=root
+# DB_PASSWORD=
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 6. Run migrations and seed
+php artisan migrate:fresh --seed
 
-## Code of Conduct
+# 7. Create the storage symlink (required for listing images)
+php artisan storage:link
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 8. Start the dev server
+npm run dev
+php artisan serve
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Seed Credentials
 
-## License
+After running `php artisan migrate:fresh --seed`:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Role | Email | Password |
+|------|-------|----------|
+| Admin (full access) | `admin@example.com` | `password` |
+| Realtor (verified user) | `lister@example.com` | `password` |
+
+Both accounts have their email pre-verified. The admin account has the `is_admin` flag set, granting policy-level bypass on all listings.
+
+---
+
+## Features
+
+- **Browse listings** — Paginated grid with filters (price range, beds, baths, area)
+- **Listing detail** — Image gallery, mortgage calculator (interactive interest rate & duration sliders), and offer form
+- **Make offers** — Authenticated users can bid on listings with a range slider input
+- **Realtor dashboard** — Create, edit, soft-delete, and restore your own listings
+- **Image uploads** — Multiple images per listing stored in `public/storage`
+- **Offer management** — Realtors accept/reject offers; accepting marks the listing as sold and auto-rejects all other offers
+- **Notifications** — In-app notification badge + paginated notification list; also sends email on new offer
+- **Email verification** — Required before accessing any realtor features
+- **Soft deletes** — Listings can be deleted and restored without data loss
+
+---
+
+## Architecture
+
+This project uses **Inertia.js** — there is no separate REST API for page rendering. Laravel controllers return Vue components with props via `inertia('Page/Name', [...props])`. A single Blade file (`resources/views/app.blade.php`) serves as the mount point.
+
+```
+resources/js/
+├── app.js                   # Inertia entry point, applies MainLayout globally
+├── Pages/                   # Page-level Vue components (map 1:1 to Laravel routes)
+│   ├── Auth/                # Login, VerifyEmail
+│   ├── Listing/             # Public browse + detail
+│   ├── Realtor/             # Dashboard, CRUD, image upload, offers
+│   ├── Notification/        # Notification list
+│   └── UserAccount/         # Registration
+├── Components/UI/           # Box, Price, ListingSpace, Pagination, EmptyState
+├── Layouts/MainLayout.vue   # Navigation, notification badge, flash messages
+└── Composables/
+    └── useMonthlyPayment.js # Amortization formula used in listing cards and detail
+```
+
+Routes are shared with the frontend via **Ziggy**, which exposes the `route()` helper in Vue components.
+
+---
+
+## Key Routes
+
+| Method | URI | Description |
+|--------|-----|-------------|
+| GET | `/listing` | Public listing index |
+| GET | `/listing/{id}` | Listing detail |
+| POST | `/listing/{id}/offer` | Submit an offer |
+| GET | `/realtor/listing` | Realtor dashboard (auth + verified) |
+| GET | `/realtor/listing/create` | Create listing form |
+| POST | `/realtor/listing` | Store new listing |
+| PUT | `/realtor/listing/{id}` | Update listing |
+| DELETE | `/realtor/listing/{id}` | Soft-delete listing |
+| PUT | `/realtor/listing/{id}/restore` | Restore soft-deleted listing |
+| POST | `/realtor/listing/{id}/image` | Upload images |
+| PUT | `/realtor/offer/{id}/accept` | Accept an offer |
+| GET | `/notification` | Notifications list |
+
+---
+
+## Known Quirks
+
+- **FK bug in offers migration** (`2023_12_21_171317_create_offers_table.php`): `bidder_id` foreign key constraint incorrectly references `listings` instead of `users`. The runtime behaviour is unaffected as long as user IDs and listing IDs don't collide, but the constraint is wrong.
+- **Synchronous queue** (`QUEUE_CONNECTION=sync`): The `OfferMade` notification (email + database) runs synchronously during the request. Switch to a real queue driver for production.
+- **Default string length**: `AppServiceProvider` sets `Schema::defaultStringLength(191)` for MySQL utf8 compatibility.
